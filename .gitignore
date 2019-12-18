@@ -1,5 +1,6 @@
 # Bin folder
 bin/*
+out/*
 
 # Compiled class file
 *.class
