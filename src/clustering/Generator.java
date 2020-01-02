@@ -12,8 +12,8 @@ import java.util.Random;
 public class Generator {
     private static final String AUTHOR = "SCION Gael & PICHARD Thomas";
 
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 1000;
+    public static final int MIN_ENV_AREA = 0;
+    public static final int MAX_ENV_AREA = 1000;
 
     private int dimension;
     private int nbPoint;
@@ -50,6 +50,12 @@ public class Generator {
 
         generateDataset();
 
+        if (isDatasetValid()) {
+            System.out.println("STATUS : OK");
+        } else {
+            System.err.println("STATUS : The generated data does not seem to be valid but the output file has been generated anyway.");
+        }
+
         // Add point list
         sb.append("points = [");
         for (int i = 0; i < points.size(); i++) {
@@ -76,24 +82,49 @@ public class Generator {
     private void generateDataset() {
         // Generate cluster centers
         Random rand = new Random();
+        ArrayList<ClusterCentre> centres = new ArrayList<>();
 
         for (int i = 0; i < nbCluster; i++) {
-            Point p = new Point(dimension);
-            points.add(p);
+            ClusterCentre c = new ClusterCentre(dimension);
+            centres.add(c);
+            points.add(c);
 
             for (int j = 0; j < dimension; j++) {
-                p.addCoordinate(rand.nextDouble() * (MAX_VALUE - MIN_VALUE) + MIN_VALUE);
+                c.updateCoordinateAt(j, rand.nextDouble() * (MAX_ENV_AREA - MIN_ENV_AREA) + MIN_ENV_AREA);
             }
         }
 
         // Generate point around cluster centers
         for (int i = 0; i < (nbPoint - nbCluster); i++) {
-            // TODO : Utiliser des zones carrées pour la génération des "sous-clusters"
+            ClusterCentre c = centres.get(rand.nextInt(centres.size()));
+            points.add(c.getRandomPointInClusterArea());
         }
     }
 
+    private boolean isDatasetValid() {
+        if (points.size() != nbPoint) {
+            return false;
+        }
+
+        for (Point p : points) {
+            ArrayList<Double> coords = p.getCoordinates();
+
+            if (coords.size() != dimension) {
+                return false;
+            }
+
+            for (Double coord : coords) {
+                if (coord < MIN_ENV_AREA || coord > MAX_ENV_AREA) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public static void main(String[] args) {
-        Generator gen = new Generator(2, 50, 10);
+        Generator gen = new Generator(2, 40, 10);
         gen.generateTo("tests/test.dat");
     }
 }

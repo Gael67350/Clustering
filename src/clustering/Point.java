@@ -2,23 +2,47 @@ package clustering;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Point {
-    private int dimension;
-    private ArrayList<Double> coords = new ArrayList<>();
+    protected int dimension;
+    protected ArrayList<Double> coords = new ArrayList<>();
 
     public Point(int dimension) {
-        if (dimension <= 0) {
-            throw new IllegalArgumentException("Invalid dimension");
+        if (dimension <= 1) {
+            throw new IllegalArgumentException("Invalid dimension (the dimension must be at least 2)");
         }
 
         this.dimension = dimension;
+
+        for (int i = 0; i < dimension; i++) {
+            coords.add(0.0);
+        }
     }
 
-    public boolean addCoordinate(Double coord) {
-        if (coords.size() >= dimension) return false;
-        coords.add(coord);
-        return true;
+    public Point(Point point) {
+        this.dimension = point.dimension;
+        this.coords = point.coords;
+    }
+
+    public void addCoordinates(ArrayList<Double> coords) {
+        if (coords.size() <= 0 || coords.size() > dimension) {
+            throw new IllegalArgumentException("The number of coordinates provided does not correspond to the size of the point");
+        }
+
+        this.coords = coords;
+    }
+
+    public void updateCoordinateAt(int position, Double value) {
+        if (position < 0 || position >= dimension) {
+            throw new IllegalArgumentException("Invalid position");
+        }
+
+        coords.set(position, value);
+    }
+
+    public ArrayList<Double> getCoordinates() {
+        return new ArrayList<>(coords);
     }
 
     @Override
@@ -37,5 +61,19 @@ public class Point {
         sb.append("]");
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return dimension == point.dimension &&
+                Objects.equals(coords, point.coords);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dimension, coords);
     }
 }
