@@ -7,7 +7,7 @@ public class Solver {
     private static final String AUTHOR = "SCION Gael & PICHARD Thomas";
     private Parser parser;
 
-    Solver(String src) {
+    public Solver(String src){
         parser = new Parser(src);
         constructiveSolution();
     }
@@ -89,7 +89,7 @@ public class Solver {
         return r.nextInt((max - min) + 1) + min;
     }
 
-    public static void main(String[] args) {
-        Solver s = new Solver("test.dat");
+    public static void main(String [] args){
+        Solver s = new Solver("tests/test.dat");
     }
 }
