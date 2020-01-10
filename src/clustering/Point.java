@@ -25,6 +25,22 @@ public class Point {
         this.coords = point.coords;
     }
 
+    public double distBetweenTwoPoints(Point p2){
+        ArrayList<Double> coordP1 = getCoordinates();
+        ArrayList<Double> coordP2 = p2.getCoordinates();
+        double dist = 0;
+
+        if (coordP1.size() != coordP2.size()) {
+            throw new IllegalArgumentException("The number of coordinates of point 1 is not the same as the number of coordinates of point 2.");
+        }
+
+        for(int i=0; i<coordP1.size(); ++i){
+            dist += Math.pow(coordP2.get(i) - coordP1.get(i), 2);
+        }
+
+        return Math.sqrt(dist);
+    }
+
     public void addCoordinates(ArrayList<Double> coords) {
         if (coords.size() <= 0 || coords.size() > dimension) {
             throw new IllegalArgumentException("The number of coordinates provided does not correspond to the size of the point");

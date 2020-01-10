@@ -88,6 +88,6 @@ public class Parser {
     }
 
     public ArrayList<Point> getPoints() {
-        return points;
+        return (ArrayList<Point>) points.clone();
     }
 }
