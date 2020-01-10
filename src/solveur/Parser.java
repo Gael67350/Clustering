@@ -3,7 +3,9 @@ package solveur;
 import clustering.Point;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -27,9 +29,8 @@ public class Parser {
 
     private void readFile(String src) throws FileNotFoundException {
         try {
-            URL url = Parser.class.getResource(src);
-            File file = new File(url.getPath());
-            Scanner sc = new Scanner(file);
+            FileInputStream fis = new FileInputStream(src);
+            Scanner sc = new Scanner(fis);
 
             int nbLine = 1;
             while (sc.hasNextLine()) {

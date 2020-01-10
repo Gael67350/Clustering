@@ -9,8 +9,8 @@ public class Solver {
     private Parser parser;
     private Object Integer;
 
-    Solver(String src){
-        parser = new Parser("test.dat");
+    public Solver(String src){
+        parser = new Parser(src);
         chooseRandomClusters();
     }
 
@@ -85,6 +85,6 @@ public class Solver {
     }
 
     public static void main(String [] args){
-        Solver s = new Solver("test.dat");
+        Solver s = new Solver("tests/test.dat");
     }
 }
