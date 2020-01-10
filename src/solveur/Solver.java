@@ -17,12 +17,12 @@ public class Solver {
     private void chooseRandomClusters(){
         ArrayList<Point> points = parser.getPoints();
         ArrayList<Point> pointsCopy = parser.getPoints();
-        ArrayList<Boolean> yn = generateBooleanTab(parser.getNbPoints()-1);
-        ArrayList<ArrayList<Boolean>> zn = generateBooleanTab2D(parser.getNbPoints()-1);
+        ArrayList<Boolean> yn = generateBooleanTab(parser.getNbPoints());
+        ArrayList<ArrayList<Boolean>> zn = generateBooleanTab2D(parser.getNbPoints());
 
         HashSet<Integer> indCluster = new HashSet<>();
         while(indCluster.size()!=parser.getNbCluster()){
-            int random = getRandomNumberInRange(0, yn.size()-1);
+            int random = getRandomNumberInRange(0, yn.size());
             indCluster.add(random);
         }
         ArrayList<Integer> indCluster2 = new ArrayList<>(indCluster);

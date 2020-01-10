@@ -60,6 +60,7 @@ public class Parser {
                             p.updateCoordinateAt(nbCoord, Double.parseDouble(s.replace(',', '.')));
                             nbCoord++;
                         }
+                        points.add(p);
                     }
                 }
                 nbLine++;
