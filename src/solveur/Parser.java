@@ -21,10 +21,10 @@ public class Parser {
             e.printStackTrace();
         }
         System.out.println("************************************");
-        System.out.println("* Données "+src+" chargées *");
-        System.out.println("* Dimension : "+dimension+"                    *");
-        System.out.println("* Nombre de points : "+nbPoints+"            *");
-        System.out.println("* Nombre de cluster : "+nbCluster+"            *");
+        System.out.println("* Données "+src+" chargées");
+        System.out.println("* Dimension : "+dimension);
+        System.out.println("* Nombre de points : "+nbPoints);
+        System.out.println("* Nombre de cluster : "+nbCluster);
         System.out.println("************************************");
     }
 

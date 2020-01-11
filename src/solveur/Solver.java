@@ -17,7 +17,7 @@ public class Solver {
         // [0] random complet *Défaut*
         // [1] modification d'un seul centre de cluster
         // [2] modification de la moitié des centres de cluster
-        recalculationOfTheSolution(60000, true, 0, yn, zn);
+        recalculationOfTheSolution(10000, true, 0, yn, zn);
     }
 
     /**
@@ -218,7 +218,7 @@ public class Solver {
         }
 
         if (previousSolution ==  actualSolution) {
-            System.out.println("Une solution a été trouvée ! " + actualSolution+" en "+iter+" itérations");
+            System.out.println("Une solution a été trouvée : " + actualSolution+" en "+iter+" itérations");
         }
 
         displaySolution(yn, zn);
@@ -231,7 +231,18 @@ public class Solver {
      * @param zn les associations des points dans chaque cluster
      */
     private void displaySolution(ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
-        System.out.println("Cluster : " + yn);
+        System.out.print("\nCluster : [ ");
+        for(int i=0; i<yn.size(); ++i){
+            if(yn.get(i)){
+                System.out.print("1 ");
+            }
+            else{
+                System.out.print("_ ");
+            }
+        }
+        System.out.println("]\n");
+        System.out.println("Associations des points dans chaque cluster :");
+
         for (int point = 0; point < zn.size(); ++point) {
             if (point + 1 < 10) {
                 System.out.print((point + 1) + "  [ ");
@@ -286,6 +297,6 @@ public class Solver {
     }
 
     public static void main(String[] args) {
-        Solver s = new Solver("tests/test0.dat");
+        Solver s = new Solver("tests/clustering.dat");
     }
 }

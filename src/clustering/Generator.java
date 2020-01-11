@@ -124,7 +124,7 @@ public class Generator {
     }
 
     public static void main(String[] args) {
-        Generator gen = new Generator(2, 50, 10);
-        gen.generateTo("tests/test.dat");
+        Generator gen = new Generator(2, 100, 5);
+        gen.generateTo("tests/test3.dat");
     }
 }
