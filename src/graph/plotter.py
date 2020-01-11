@@ -3,7 +3,7 @@ import OplFile as opl
 import matplotlib.pyplot as plt
 
 # Config variables
-FILE_PATH = "../../tests/test1.dat"
+FILE_PATH = "../../tests/test.dat"
 ENV_SIZE = 1000
 
 # Regex
