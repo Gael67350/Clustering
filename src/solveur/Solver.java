@@ -17,7 +17,7 @@ public class Solver {
         // [0] random complet *Défaut*
         // [1] modification d'un seul centre de cluster
         // [2] modification de la moitié des centres de cluster
-        recalculationOfTheSolution(120000, true, 0, yn, zn);
+        recalculationOfTheSolution(60000, true, 0, yn, zn);
     }
 
     /**
@@ -193,7 +193,7 @@ public class Solver {
         }
 
         int iter = 0;
-        while ((actualTime - startTime) < wait && Math.round(previousSolution*1000) != Math.round(actualSolution*1000)) {
+        while ((actualTime - startTime) < wait && previousSolution != actualSolution) {
             ynTest = disruptionSolution(disruptMode, ynTest, znTest);
             znTest = setPointInCluster(ynTest);
             actualSolution = sumDistInCluster(ynTest, znTest);
@@ -214,11 +214,11 @@ public class Solver {
         }
 
         if ((actualTime - startTime) >= wait) {
-            System.out.println("Arrêt du Système le temps est dépassé, meilleur solution trouvée : " + bestSolution);
+            System.out.println("Arrêt du Système le temps est dépassé, meilleur solution trouvée : " + bestSolution+" en "+iter+" itérations");
         }
 
-        if (Math.round(previousSolution*1000) ==  Math.round(actualSolution*1000)) {
-            System.out.println("Une solution a été trouvée ! " + actualSolution);
+        if (previousSolution ==  actualSolution) {
+            System.out.println("Une solution a été trouvée ! " + actualSolution+" en "+iter+" itérations");
         }
 
         displaySolution(yn, zn);
@@ -286,6 +286,6 @@ public class Solver {
     }
 
     public static void main(String[] args) {
-        Solver s = new Solver("tests/test.dat");
+        Solver s = new Solver("tests/test0.dat");
     }
 }
