@@ -2,17 +2,12 @@ package solveur;
 
 import clustering.Point;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Parser {
-    private static final String AUTHOR = "SCION Gael & PICHARD Thomas";
-
     private int dimension;
     private int nbPoints;
     private int nbCluster;
@@ -71,10 +66,6 @@ public class Parser {
             System.err.println("File not found");
             throw new FileNotFoundException();
         }
-    }
-
-    public static String getAUTHOR() {
-        return AUTHOR;
     }
 
     public int getDimension() {
