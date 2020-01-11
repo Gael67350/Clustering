@@ -1,7 +1,9 @@
 package clustering;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Point {
@@ -25,7 +27,7 @@ public class Point {
         this.coords = point.coords;
     }
 
-    public double distBetweenTwoPoints(Point p2){
+    public double distBetweenTwoPoints(Point p2) {
         ArrayList<Double> coordP1 = getCoordinates();
         ArrayList<Double> coordP2 = p2.getCoordinates();
         double dist = 0;
@@ -34,7 +36,7 @@ public class Point {
             throw new IllegalArgumentException("The number of coordinates of point 1 is not the same as the number of coordinates of point 2.");
         }
 
-        for(int i=0; i<coordP1.size(); ++i){
+        for (int i = 0; i < coordP1.size(); ++i) {
             dist += Math.pow(coordP2.get(i) - coordP1.get(i), 2);
         }
 
@@ -64,7 +66,10 @@ public class Point {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        DecimalFormat maxDigitsFormatter = new DecimalFormat("#.######");
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.getDefault());
+        dfs.setDecimalSeparator('.');
+        dfs.setGroupingSeparator(',');
+        DecimalFormat maxDigitsFormatter = new DecimalFormat("#.######", dfs);
 
         sb.append("[");
         for (int i = 0; i < coords.size(); i++) {
