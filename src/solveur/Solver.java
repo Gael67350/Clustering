@@ -17,7 +17,8 @@ public class Solver {
         // [0] random complet *Défaut*
         // [1] modification d'un seul centre de cluster
         // [2] modification de la moitié des centres de cluster
-        recalculationOfTheSolution(10000, true, 0, yn, zn);
+        // [3] TODO modification de tout les clusters avec le points le plus proche de chaque centre de cluster
+        recalculationOfTheSolution(120000, true, 0, yn, zn);
     }
 
     /**
@@ -129,6 +130,9 @@ public class Solver {
             case 2:
                 yn = changeYn(Math.floorDiv(parser.getNbCluster(), 2), yn, zn);
                 break;
+            case 3:
+//                yn = changeYnNearestNeighbor(yn, zn);
+                break;
             default:
                 Collections.shuffle(yn, new Random());
                 break;
@@ -160,6 +164,39 @@ public class Solver {
         }
 
         return yn;
+    }
+
+    private ArrayList<Boolean> changeYnNearestNeighbor(ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
+        ArrayList<Boolean> yn2 = generateBooleanTab(yn.size());
+        ArrayList<Double> dists = new ArrayList<>();
+        ArrayList<Point> points = parser.getPoints();
+        for(int i=0; i<yn.size(); ++i){
+            if(yn.get(i)){
+                for(Point p: parser.getPoints()){
+                    if(p!=points.get(i)){
+                        dists.add(p.distBetweenTwoPoints(points.get(i)));
+                    }
+                    else{
+                        dists.add(Double.MAX_VALUE);
+                    }
+                }
+                yn2.set(dists.indexOf(Collections.min(dists)), true);
+                dists = new ArrayList<>();
+            }
+        }
+
+        int check = 0;
+        for(Boolean b : yn2){
+            if(b){
+                check++;
+            }
+        }
+        if(check!=parser.getNbCluster()){
+            System.out.println("Erreur yn ne contient pas assez de cluster");
+            System.exit(0);
+        }
+
+        return yn2;
     }
 
     /**
@@ -196,6 +233,7 @@ public class Solver {
         while ((actualTime - startTime) < wait && previousSolution != actualSolution) {
             ynTest = disruptionSolution(disruptMode, ynTest, znTest);
             znTest = setPointInCluster(ynTest);
+            previousSolution = actualSolution;
             actualSolution = sumDistInCluster(ynTest, znTest);
             actualTime = System.currentTimeMillis();
             if (actualSolution < bestSolution) {
@@ -204,7 +242,7 @@ public class Solver {
                 zn = copyTab2D(znTest);
                 res.add(actualSolution);
             }
-            if(iter%10000==0){
+            if(iter%10000==0 ||iter<=1){
                 res.add(actualSolution);
                 if(displayChart){
                     Courbes.mainPanel.setScores(res);
@@ -213,12 +251,16 @@ public class Solver {
             iter++;
         }
 
+        res.add(actualSolution);
+        res.add(bestSolution);
+        Courbes.mainPanel.setScores(res);
+
         if ((actualTime - startTime) >= wait) {
-            System.out.println("Arrêt du Système le temps est dépassé, meilleur solution trouvée : " + bestSolution+" en "+iter+" itérations");
+            System.out.println("Arrêt du Système le temps est dépassé, meilleur solution trouvée : " + bestSolution+" en un total de "+iter+" itérations");
         }
 
         if (previousSolution ==  actualSolution) {
-            System.out.println("Une solution a été trouvée : " + actualSolution+" en "+iter+" itérations");
+            System.out.println("Une solution a été trouvée : " + bestSolution+" en un total de "+iter+" itérations");
         }
 
         displaySolution(yn, zn);
@@ -231,16 +273,7 @@ public class Solver {
      * @param zn les associations des points dans chaque cluster
      */
     private void displaySolution(ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
-        System.out.print("\nCluster : [ ");
-        for(int i=0; i<yn.size(); ++i){
-            if(yn.get(i)){
-                System.out.print("1 ");
-            }
-            else{
-                System.out.print("_ ");
-            }
-        }
-        System.out.println("]\n");
+        displaySolution(yn);
         System.out.println("Associations des points dans chaque cluster :");
 
         for (int point = 0; point < zn.size(); ++point) {
@@ -259,6 +292,19 @@ public class Solver {
             System.out.println("]");
         }
         System.out.println("------------------------------------------------------------------------------------------");
+    }
+
+    private void displaySolution(ArrayList<Boolean> yn){
+        System.out.print("\nCluster : [ ");
+        for(int i=0; i<yn.size(); ++i){
+            if(yn.get(i)){
+                System.out.print("1 ");
+            }
+            else{
+                System.out.print("_ ");
+            }
+        }
+        System.out.println("]\n");
     }
 
     private ArrayList<ArrayList<Boolean>> generateBooleanTab2D(int length) {
