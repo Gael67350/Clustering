@@ -3,7 +3,7 @@ import OplFile as opl
 import matplotlib.pyplot as plt
 
 # Config variables
-FILE_PATH = "../../tests/test.dat"
+FILE_PATH = "../../tests/dev.dat"
 ENV_SIZE = 1000
 
 # Regex
@@ -11,8 +11,8 @@ DIMENSION_REGEX = r"dimension\s*=\s*[0-9]+;"
 NB_POINTS_REGEX = r"^nbPoints\s*=\s*[0-9]+"
 NB_CLUSTER_REGEX = r"^nbCluster\s*=\s*[0-9]+"
 POINTS_ARRAY_REGEX = r"^points\s*=\s*\[(\[.*])\];"
-POINT_REGEX = r"\[([0-9]+[,.][0-9]+),\s([0-9]+[,.][0-9]+)\]"
-INTEGER_REGEX = r"[0-9]+"
+POINT_REGEX = r"\[(-?[0-9]+[,.]-?[0-9]+),\s(-?[0-9]+[,.]-?[0-9]+)\]"
+INTEGER_REGEX = r"-?[0-9]+"
 
 
 def main():

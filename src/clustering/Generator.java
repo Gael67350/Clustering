@@ -11,6 +11,7 @@ import java.util.Random;
 
 public class Generator {
     private static final String AUTHOR = "SCION Gael & PICHARD Thomas";
+    private static Random rand = new Random();
 
     public static final int MIN_ENV_AREA = 0;
     public static final int MAX_ENV_AREA = 1000;
@@ -20,6 +21,11 @@ public class Generator {
     private int nbCluster;
 
     private ArrayList<Point> points = new ArrayList<>();
+    private ArrayList<ClusterCentre> centres = new ArrayList<>();
+
+    public static Random getRandomInstance() {
+        return rand;
+    }
 
     public Generator(int dimension, int nbPoint, int nbCluster) {
         if (dimension <= 0 || nbCluster < 0 || nbCluster > nbPoint) {
@@ -66,6 +72,14 @@ public class Generator {
             }
         }
         sb.append("];");
+        sb.append(System.lineSeparator()).append(System.lineSeparator());
+
+        // Add cluster centers used for generation
+        sb.append("/*").append(System.lineSeparator()).append("Cluster centers used for generation :").append(System.lineSeparator());
+        for (int i = 0; i < centres.size(); i++) {
+            sb.append(points.get(i).toString()).append(System.lineSeparator());
+        }
+        sb.append("*/");
 
         // Write new file
         try {
@@ -81,9 +95,6 @@ public class Generator {
 
     private void generateDataset() {
         // Generate cluster centers
-        Random rand = new Random();
-        ArrayList<ClusterCentre> centres = new ArrayList<>();
-
         for (int i = 0; i < nbCluster; i++) {
             ClusterCentre c = new ClusterCentre(dimension);
             centres.add(c);
@@ -95,7 +106,7 @@ public class Generator {
         }
 
         // Generate point around cluster centers
-        for (int i = 0; i < (nbPoint - nbCluster); i++) {
+        for (int i = 0; i < (nbPoint - centres.size()); i++) {
             ClusterCentre c = centres.get(rand.nextInt(centres.size()));
             points.add(c.getRandomPointInClusterArea());
         }
@@ -125,6 +136,6 @@ public class Generator {
 
     public static void main(String[] args) {
         Generator gen = new Generator(2, 100, 5);
-        gen.generateTo("tests/test3.dat");
+        gen.generateTo("tests/test.dat");
     }
 }
