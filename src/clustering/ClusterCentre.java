@@ -1,5 +1,6 @@
 package clustering;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class ClusterCentre extends Point {
@@ -11,24 +12,31 @@ public class ClusterCentre extends Point {
     }
 
     public Point getRandomPointInClusterArea() {
-        Random rand = new Random();
+        ArrayList<ArrayList<Double>> dimensionLimits = new ArrayList<>();
 
-        double areaLength = rand.nextDouble() * (MAX_CLUSTER_AREA - MIN_CLUSTER_AREA) + MIN_CLUSTER_AREA;
-        double areaMin = coords.get(0) - (areaLength / 2.0);
-        double areaMax = coords.get(0) + (areaLength / 2.0);
+        for (int i = 0; i < dimension; i++) {
+            double areaLength = Generator.getRandomInstance().nextDouble() * (MAX_CLUSTER_AREA - MIN_CLUSTER_AREA) + MIN_CLUSTER_AREA;
+            double areaMin = coords.get(i) - (areaLength / 2.0);
+            double areaMax = coords.get(i) + (areaLength / 2.0);
 
-        if (areaMin < Generator.MIN_ENV_AREA) {
-            areaMin = Generator.MIN_ENV_AREA;
-        }
+            if (areaMin < Generator.MIN_ENV_AREA) {
+                areaMin = Generator.MIN_ENV_AREA;
+            }
 
-        if (areaMax > Generator.MAX_ENV_AREA) {
-            areaMax = Generator.MAX_ENV_AREA;
+            if (areaMax > Generator.MAX_ENV_AREA) {
+                areaMax = Generator.MAX_ENV_AREA;
+            }
+
+            ArrayList<Double> limits = new ArrayList<>();
+            limits.add(areaMin);
+            limits.add(areaMax);
+            dimensionLimits.add(limits);
         }
 
         Point p = new Point(dimension);
 
         for (int i = 0; i < p.dimension; i++) {
-            p.updateCoordinateAt(i, rand.nextDouble() * (areaMax - areaMin) + areaMin);
+            p.updateCoordinateAt(i, Generator.getRandomInstance().nextDouble() * (dimensionLimits.get(i).get(1) - dimensionLimits.get(i).get(0)) + dimensionLimits.get(i).get(0));
         }
 
         return p;
