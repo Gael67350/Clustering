@@ -18,7 +18,7 @@ public class Solver {
         // [1] modification d'un seul centre de cluster
         // [2] modification de la moitié des centres de cluster
         // [3] TODO modification de tout les clusters avec le points le plus proche de chaque centre de cluster
-        recalculationOfTheSolution(120000, true, 0, yn, zn);
+        recalculationOfTheSolution(10000, true, 2, false, yn, zn);
     }
 
     /**
@@ -204,7 +204,7 @@ public class Solver {
      *
      * @param waitTime temps maximal avant interruption si aucune solution n'est trouvée en millisecondes
      */
-    private void recalculationOfTheSolution(int waitTime, boolean displayChart, int disruptMode, ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
+    private void recalculationOfTheSolution(int waitTime, boolean displayChart, int disruptMode, boolean onlyMode, ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
         System.out.println("*****************************************************************************");
         System.out.println("* Demarrage du calcul d'une solution avec un temps maximal de : "+(waitTime/1000)+" secondes *");
         System.out.println("*****************************************************************************");
@@ -231,7 +231,21 @@ public class Solver {
 
         int iter = 0;
         while ((actualTime - startTime) < wait && previousSolution != actualSolution) {
-            ynTest = disruptionSolution(disruptMode, ynTest, znTest);
+            if(onlyMode){
+                ynTest = disruptionSolution(disruptMode, ynTest, znTest);
+            }
+            else{
+                if(iter<=1000){
+                    ynTest = disruptionSolution(0, ynTest, znTest);
+                }
+                else if(iter%50==0){
+                    ynTest = disruptionSolution(0, ynTest, znTest);
+                }
+                else{
+                    ynTest = disruptionSolution(disruptMode, ynTest, znTest);
+                }
+            }
+
             znTest = setPointInCluster(ynTest);
             previousSolution = actualSolution;
             actualSolution = sumDistInCluster(ynTest, znTest);
@@ -298,7 +312,8 @@ public class Solver {
         System.out.print("\nCluster : [ ");
         for(int i=0; i<yn.size(); ++i){
             if(yn.get(i)){
-                System.out.print("1 ");
+//                System.out.print("1 ");
+                System.out.print(parser.getPoints().get(i)+" ");
             }
             else{
                 System.out.print("_ ");
@@ -343,6 +358,6 @@ public class Solver {
     }
 
     public static void main(String[] args) {
-        Solver s = new Solver("tests/clustering.dat");
+        Solver s = new Solver("tests/clustering0.dat");
     }
 }
