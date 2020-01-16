@@ -9,7 +9,7 @@ import java.util.*;
 public class Solver {
     private Parser parser;
 
-    public Solver(String src) {
+    public Solver(String src, int waitTimeMax, boolean displayChart, int disruptMode, boolean onlyMode) {
         parser = new Parser(src);
         ArrayList<Boolean> yn = constructiveSolution();
         ArrayList<ArrayList<Boolean>> zn = setPointInCluster(yn);
@@ -18,7 +18,7 @@ public class Solver {
         // [1] modification d'un seul centre de cluster
         // [2] modification de la moitié des centres de cluster
         // [3] TODO modification de tout les clusters avec le points le plus proche de chaque centre de cluster
-        recalculationOfTheSolution(10000, true, 2, false, yn, zn);
+        recalculationOfTheSolution(waitTimeMax, displayChart, disruptMode, onlyMode, yn, zn);
     }
 
     /**
@@ -120,7 +120,7 @@ public class Solver {
      * @param mode type de perturbation
      * @param yn   les centres de cluster
      * @param zn   les associations des points dans chaque cluster
-     * return yn modifié
+     *             return yn modifié
      */
     private ArrayList<Boolean> disruptionSolution(int mode, ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
         switch (mode) {
@@ -143,8 +143,8 @@ public class Solver {
 
     private ArrayList<Boolean> changeYn(int clusterToChange, ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
         ArrayList<Integer> indCluster = new ArrayList<>();
-        if(clusterToChange<=parser.getNbCluster()){
-            clusterToChange=parser.getNbCluster();
+        if (clusterToChange <= parser.getNbCluster()) {
+            clusterToChange = parser.getNbCluster();
         }
         for (int i = 0; i < clusterToChange; ++i) {
             if (yn.get(i)) {
@@ -170,13 +170,12 @@ public class Solver {
         ArrayList<Boolean> yn2 = generateBooleanTab(yn.size());
         ArrayList<Double> dists = new ArrayList<>();
         ArrayList<Point> points = parser.getPoints();
-        for(int i=0; i<yn.size(); ++i){
-            if(yn.get(i)){
-                for(Point p: parser.getPoints()){
-                    if(p!=points.get(i)){
+        for (int i = 0; i < yn.size(); ++i) {
+            if (yn.get(i)) {
+                for (Point p : parser.getPoints()) {
+                    if (p != points.get(i)) {
                         dists.add(p.distBetweenTwoPoints(points.get(i)));
-                    }
-                    else{
+                    } else {
                         dists.add(Double.MAX_VALUE);
                     }
                 }
@@ -186,12 +185,12 @@ public class Solver {
         }
 
         int check = 0;
-        for(Boolean b : yn2){
-            if(b){
+        for (Boolean b : yn2) {
+            if (b) {
                 check++;
             }
         }
-        if(check!=parser.getNbCluster()){
+        if (check != parser.getNbCluster()) {
             System.out.println("Erreur yn ne contient pas assez de cluster");
             System.exit(0);
         }
@@ -206,7 +205,7 @@ public class Solver {
      */
     private void recalculationOfTheSolution(int waitTime, boolean displayChart, int disruptMode, boolean onlyMode, ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
         System.out.println("*****************************************************************************");
-        System.out.println("* Demarrage du calcul d'une solution avec un temps maximal de : "+(waitTime/1000)+" secondes *");
+        System.out.println("* Demarrage du calcul d'une solution avec un temps maximal de : " + (waitTime / 1000) + " secondes *");
         System.out.println("*****************************************************************************");
         long wait = waitTime;
 
@@ -231,17 +230,14 @@ public class Solver {
 
         int iter = 0;
         while ((actualTime - startTime) < wait && previousSolution != actualSolution) {
-            if(onlyMode){
+            if (onlyMode) {
                 ynTest = disruptionSolution(disruptMode, ynTest, znTest);
-            }
-            else{
-                if(iter<=1000){
+            } else {
+                if (iter <= 1000) {
                     ynTest = disruptionSolution(0, ynTest, znTest);
-                }
-                else if(iter%50==0){
+                } else if (iter % 50 == 0) {
                     ynTest = disruptionSolution(0, ynTest, znTest);
-                }
-                else{
+                } else {
                     ynTest = disruptionSolution(disruptMode, ynTest, znTest);
                 }
             }
@@ -256,9 +252,9 @@ public class Solver {
                 zn = copyTab2D(znTest);
                 res.add(actualSolution);
             }
-            if(iter%10000==0 ||iter<=1){
+            if (iter % 10000 == 0 || iter <= 1) {
                 res.add(actualSolution);
-                if(displayChart){
+                if (displayChart) {
                     Courbes.mainPanel.setScores(res);
                 }
             }
@@ -270,11 +266,11 @@ public class Solver {
         Courbes.mainPanel.setScores(res);
 
         if ((actualTime - startTime) >= wait) {
-            System.out.println("Arrêt du Système le temps est dépassé, meilleur solution trouvée : " + bestSolution+" en un total de "+iter+" itérations");
+            System.out.println("Arrêt du Système le temps est dépassé, meilleur solution trouvée : " + bestSolution + " en un total de " + iter + " itérations");
         }
 
-        if (previousSolution ==  actualSolution) {
-            System.out.println("Une solution a été trouvée : " + bestSolution+" en un total de "+iter+" itérations");
+        if (previousSolution == actualSolution) {
+            System.out.println("Une solution a été trouvée : " + bestSolution + " en un total de " + iter + " itérations");
         }
 
         displaySolution(yn, zn);
@@ -308,14 +304,13 @@ public class Solver {
         System.out.println("------------------------------------------------------------------------------------------");
     }
 
-    private void displaySolution(ArrayList<Boolean> yn){
+    private void displaySolution(ArrayList<Boolean> yn) {
         System.out.print("\nCluster : [ ");
-        for(int i=0; i<yn.size(); ++i){
-            if(yn.get(i)){
+        for (int i = 0; i < yn.size(); ++i) {
+            if (yn.get(i)) {
 //                System.out.print("1 ");
-                System.out.print(parser.getPoints().get(i)+" ");
-            }
-            else{
+                System.out.print(parser.getPoints().get(i) + " ");
+            } else {
                 System.out.print("_ ");
             }
         }
@@ -358,6 +353,34 @@ public class Solver {
     }
 
     public static void main(String[] args) {
-        Solver s = new Solver("tests/clustering0.dat");
+        String src = "";
+        int waitTimeMax;
+        boolean displayChart;
+        int disruptMode;
+        boolean onlyMode;
+        try {
+            if (args.length > 0) {
+                src = args[0];
+            } else {
+                System.out.println("Veuillez indiquer au moins le nom d'un fichier .dat");
+                System.exit(0);
+            }
+            if (args.length > 1) {
+                waitTimeMax = Integer.parseInt(args[1]);
+            } else {
+                waitTimeMax = 10000;
+            }
+            displayChart = args.length > 2 && args[2].compareTo("1") == 0;
+            if (args.length > 3) {
+                disruptMode = Integer.parseInt(args[3]);
+            } else {
+                disruptMode = 2;
+            }
+            onlyMode = args.length > 4 && args[4].compareTo("1") == 0;
+            System.out.println(src + " " + waitTimeMax + " " + displayChart + " " + disruptMode + " " + onlyMode);
+            Solver s = new Solver(src, waitTimeMax, displayChart, disruptMode, onlyMode);
+        } catch (NumberFormatException exception) {
+            System.out.println("Erreur dans les paramètres d'entrée");
+        }
     }
 }

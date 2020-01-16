@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ASCII"?><project>
+	<version>1.0</version>
+	<configs>
+		<config default="false" name="Configuration " category="opl">
+		</config>
+		<config default="false" name="k-medoids" category="opl">
+			<ref name="Cluster_k-medoids.mod" type="model">
+			</ref>
+		</config>
+		<config default="false" name="p-centre" category="opl">
+			<ref name="Cluster_p-centre.mod" type="model">
+			</ref>
+		</config>
+		<config default="true" name="p-median" category="opl">
+			<ref name="Cluster_p-median.mod" type="model">
+			</ref>
+		</config>
+		<config default="false" name="min-sum-k-radii" category="opl">
+			<ref name="Cluster_min-sum-k-radii.mod" type="model">
+			</ref>
+		</config>
+	</configs>
+	
+</project>
