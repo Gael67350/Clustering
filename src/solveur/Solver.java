@@ -270,7 +270,7 @@ public class Solver {
         }
 
         if (previousSolution == actualSolution) {
-            System.out.println("Une solution a été trouvée : " + bestSolution + " en un total de " + iter + " itérations");
+            System.out.println("Une solution a été trouvée : " + bestSolution + " en un total de " + iter + " itérations"+" en "+(actualTime - startTime)+" millisecondes");
         }
 
         displaySolution(yn, zn);
