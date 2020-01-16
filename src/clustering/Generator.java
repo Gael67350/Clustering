@@ -135,7 +135,24 @@ public class Generator {
     }
 
     public static void main(String[] args) {
-        Generator gen = new Generator(2, 100, 5);
-        gen.generateTo("tests/test.dat");
+        if (args.length != 4) {
+            System.err.println("Usage: <dimension> <nbPoint> <nbCluster> <filepath>");
+            return;
+        }
+
+        int dimension, nbPoint, nbCluster;
+
+        try {
+            dimension = Integer.parseInt(args[0]);
+            nbPoint = Integer.parseInt(args[1]);
+            nbCluster = Integer.parseInt(args[2]);
+        } catch (NumberFormatException ex) {
+            System.err.println("Invalid arguments passed : " + ex.getMessage());
+            System.err.println("Usage: <dimension> <nbPoint> <nbCluster> <filepath>");
+            return;
+        }
+
+        Generator gen = new Generator(dimension, nbPoint, nbCluster);
+        gen.generateTo(args[3]);
     }
 }

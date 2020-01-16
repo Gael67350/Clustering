@@ -1,9 +1,10 @@
+import sys
+import traceback
 import re
 import OplFile as opl
 import matplotlib.pyplot as plt
 
 # Config variables
-FILE_PATH = "../../tests/dev.dat"
 ENV_SIZE = 1000
 
 # Regex
@@ -16,18 +17,28 @@ INTEGER_REGEX = r"-?[0-9]+"
 
 
 def main():
-    opl_file = parse(FILE_PATH)
+    try:
+        if len(sys.argv) != 3:
+            print("Usage: <filepath> <map_filepath>")
+            sys.exit(1)
 
-    print("dimension = " + str(opl_file.dim))
-    print("nb_points = " + str(opl_file.nb_points))
-    print("nb_cluster = " + str(opl_file.nb_cluster))
-    print("points array size = " + str(len(opl_file.points)))
+        opl_file = parse('../../tests/' + sys.argv[1])
 
-    plot2d(opl_file)
+        print("dimension = " + str(opl_file.dim))
+        print("nb_points = " + str(opl_file.nb_points))
+        print("nb_cluster = " + str(opl_file.nb_cluster))
+        print("points array size = " + str(len(opl_file.points)))
+
+        plot2d(opl_file, '../../tests/' + sys.argv[2])
+    except KeyboardInterrupt:
+        print("Shutdown requested...exiting")
+    except Exception:
+        traceback.print_exc(file=sys.stdout)
+        sys.exit(0)
 
 
 def parse(filePath):
-    file = open(FILE_PATH, "r")
+    file = open(filePath, "r")
     lines = file.readlines()
 
     dim = 0
@@ -67,7 +78,7 @@ def parse_integer(value):
     return int(re.search(INTEGER_REGEX, value).group(0))
 
 
-def plot2d(opl_file):
+def plot2d(opl_file, filepath):
     if opl_file.dim == 2:
         x = []
         y = []
@@ -86,7 +97,7 @@ def plot2d(opl_file):
         plt.xlabel('x')
         plt.ylabel('y')
 
-        plt.savefig('map.png')
+        plt.savefig(filepath + '.png')
         plt.show()
 
 
