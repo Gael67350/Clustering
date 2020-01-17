@@ -22,14 +22,14 @@ def main():
             print("Usage: <filepath> <map_filepath>")
             sys.exit(1)
 
-        opl_file = parse('../../tests/' + sys.argv[1])
+        opl_file = parse('../tests/' + sys.argv[1])
 
         print("dimension = " + str(opl_file.dim))
         print("nb_points = " + str(opl_file.nb_points))
         print("nb_cluster = " + str(opl_file.nb_cluster))
         print("points array size = " + str(len(opl_file.points)))
 
-        plot2d(opl_file, '../../tests/' + sys.argv[2])
+        plot2d(opl_file, '../tests/' + sys.argv[2])
     except KeyboardInterrupt:
         print("Shutdown requested...exiting")
     except Exception:
