@@ -84,7 +84,7 @@ disruptMode1 : Mode de perturbation intensification (cf liste des modes disponib
 disruptMode2 : Mode de perturbation diversification (cf liste des modes disponibles) *Défaut=0*
 onlyMode :     Boolean indiquant si vous souhaitez n'utiliser que la méthode <disruptMode1> durant tout le temps
                de recherche ou réaliser de l'intensification/diversification *Défaut=0*
-               [Si <onlyMode> est à false alors toute les 50 itérations le solveur appellera la méthode <disruptMode2> pour
+               [Si <onlyMode> est à false alors toutes les 50 itérations le solveur appellera la méthode <disruptMode2> pour
                modifier les centres de cluster]
 ````
 
