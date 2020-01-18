@@ -6,19 +6,25 @@
 		<config default="false" name="k-medoids" category="opl">
 			<ref name="Cluster_k-medoids.mod" type="model">
 			</ref>
+			<ref name="test10.dat" type="data">
+			</ref>
 		</config>
-		<config default="false" name="p-centre" category="opl">
+		<config default="true" name="p-centre" category="opl">
 			<ref name="Cluster_p-centre.mod" type="model">
 			</ref>
+			<ref name="test10.dat" type="data">
+			</ref>
 		</config>
-		<config default="true" name="p-median" category="opl">
+		<config default="false" name="p-median" category="opl">
 			<ref name="Cluster_p-median.mod" type="model">
 			</ref>
-			<ref name="clustering.dat" type="data">
+			<ref name="test10.dat" type="data">
 			</ref>
 		</config>
 		<config default="false" name="min-sum-k-radii" category="opl">
 			<ref name="Cluster_min-sum-k-radii.mod" type="model">
+			</ref>
+			<ref name="test10.dat" type="data">
 			</ref>
 		</config>
 	</configs>

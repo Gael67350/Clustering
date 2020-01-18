@@ -75,19 +75,22 @@ Le solveur utilisant différentes méta-heuristiques et affichant la solution so
 Avant d'exécuter la commande, veillez à vous rendre dans le dossier /build du projet.
 
 ````shell script
-java -jar Solver.jar <filepath> <waitTimeMax> <displayChart> <disruptMode> <onlyMode>
+java -jar Solver.jar <filepath> <waitTimeMax> <displayChart> <disruptMode1> <disruptMode2> <onlyMode>
 
-filepath:     Le chemin vers le fichier de données au format OPL
-waitTimeMax:  Temps maximal en milliseconde avant l'arrêt du solveur si aucune solution n'est trouvée avant
-displayChart: Boolean indiquant si vous souhaitez afficher le graphique durant la recherche de solution
-disruptMode : Mode de perturbation (cf liste des modes disponibles)
-onlyMode :    Boolean indiquant si vous souhaitez n'utiliser que la méthode <disruptMode> durant tout le temps
-              de recherche ou réaliser de l'intensification/diversification
+filepath:      Le chemin vers le fichier de données au format OPL
+waitTimeMax:   Temps maximal en milliseconde avant l'arrêt du solveur si aucune solution n'est trouvée avant
+displayChart:  Boolean indiquant si vous souhaitez afficher le graphique durant la recherche de solution *Défaut=0*
+disruptMode1 : Mode de perturbation intensification (cf liste des modes disponibles) *Défaut=0*
+disruptMode2 : Mode de perturbation diversification (cf liste des modes disponibles) *Défaut=0*
+onlyMode :     Boolean indiquant si vous souhaitez n'utiliser que la méthode <disruptMode1> durant tout le temps
+               de recherche ou réaliser de l'intensification/diversification *Défaut=0*
+               [Si <onlyMode> est à false alors toute les 50 itérations le solveur appellera la méthode <disruptMode2> pour
+               modifier les centres de cluster]
 ````
 
 ##### Modes de perturbations disponibles
 ````text
-[0] Aléatoire complet *Defaut*
+[0] Aléatoire complet
 [1] Modification d'un seul centre de cluster
 [2] Modification de la moitié des centres de cluster
 [3] Modification de tout les clusters avec le points le plus proche de chaque centre de cluster
@@ -96,10 +99,10 @@ onlyMode :    Boolean indiquant si vous souhaitez n'utiliser que la méthode <di
 
 ##### Exemple :
 Pour ouvrir le fichier OPL "clustering.dat" situé dans le même dossier que Solveur.jar, avec un temps maximal de 10 secondes, 
-en affichant le graphique, avec le mode 2 de perturbation et en demandant de faire de l'intensification/diversification :
+en affichant le graphique, avec le mode 2 de perturbation intensification et le mode 0 de perturbation diversification et en demandant de faire de l'intensification/diversification :
 
 ````shell script
-java -jar Solver.jar clustering.dat 10000 1 2 0
+java -jar Solver.jar clustering.dat 10000 1 2 0 0
 ````
 
 ##### Autres informations :

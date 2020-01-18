@@ -2,14 +2,16 @@ package solver;
 
 import clustering.Point;
 import graph.Courbes;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import java.util.*;
 
 public class Solver {
     private Parser parser;
+    private ArrayList<Point> alreadyVisited = new ArrayList<>();
 
-    public Solver(String src, int waitTimeMax, boolean displayChart, int disruptMode, boolean onlyMode) {
+    public Solver(String src, int waitTimeMax, boolean displayChart, int disruptMode1, int disruptMode2, boolean onlyMode) {
         parser = new Parser(src);
         ArrayList<Boolean> yn = constructiveSolution();
         ArrayList<ArrayList<Boolean>> zn = setPointInCluster(yn);
@@ -18,7 +20,7 @@ public class Solver {
         // [1] modification d'un seul centre de cluster
         // [2] modification de la moitie des centres de cluster
         // [3] modification de tout les clusters avec le points le plus proche de chaque centre de cluster
-        recalculationOfTheSolution(waitTimeMax, displayChart, disruptMode, onlyMode, yn, zn);
+        recalculationOfTheSolution(waitTimeMax, displayChart, disruptMode1, disruptMode2, onlyMode, yn, zn);
     }
 
     /**
@@ -168,18 +170,38 @@ public class Solver {
 
     private ArrayList<Boolean> changeYnNearestNeighbor(ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
         ArrayList<Boolean> yn2 = generateBooleanTab(yn.size());
-        ArrayList<Double> dists = new ArrayList<>();
+        ArrayList<Pair<Point, Double>> dists = new ArrayList<>();
         ArrayList<Point> points = parser.getPoints();
+        for (int i = 0; i < yn.size(); ++i) {
+            if (yn.get(i)) {
+                alreadyVisited.add(points.get(i));
+            }
+        }
+        if(alreadyVisited.size()>=points.size() - parser.getNbCluster()){
+            alreadyVisited = new ArrayList<>();
+        }
         for (int i = 0; i < yn.size(); ++i) {
             if (yn.get(i)) {
                 for (Point p : parser.getPoints()) {
                     if (p != points.get(i)) {
-                        dists.add(p.distBetweenTwoPoints(points.get(i)));
-                    } else {
-                        dists.add(Double.MAX_VALUE);
+                        dists.add(new Pair<>(p, p.distBetweenTwoPoints(points.get(i))));
                     }
                 }
-                yn2.set(dists.indexOf(Collections.min(dists)), true);
+                dists.sort((o1, o2) -> {
+                    if (o1.getValue().equals(o2.getValue())) {
+                        return 0;
+                    } else if (o1.getValue() > o2.getValue()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                });
+                for(Pair<Point, Double> p : dists){
+                    if(!alreadyVisited.contains(p.getKey())){
+                        yn2.set(points.indexOf(p.getKey()), true);
+                        break;
+                    }
+                }
                 dists = new ArrayList<>();
             }
         }
@@ -190,20 +212,35 @@ public class Solver {
                 check++;
             }
         }
-        if (check != parser.getNbCluster()) {
-            System.out.println("Erreur yn ne contient pas assez de cluster");
-            System.exit(0);
+
+        ArrayList<Integer> rest = new ArrayList<>();
+        for(int i=0; i<points.size(); ++i){
+            if(!alreadyVisited.contains(points.get(i))){
+                rest.add(i);
+            }
+        }
+
+        while (check != parser.getNbCluster()) {
+            int random = getRandomNumberInRange(0, rest.size() - 1);
+            if(!yn2.get(rest.get(random))){
+                yn2.set(rest.get(random), true);
+                rest.remove(random);
+                check++;
+            }
+            else{
+                rest.remove(random);
+            }
         }
 
         return yn2;
     }
 
     /**
-     * M�thode pour progresser dans la courbe en modifiant les cluster
+     * Methode pour progresser dans la courbe en modifiant les cluster
      *
      * @param waitTime temps maximal avant interruption si aucune solution n'est trouvee en millisecondes
      */
-    private void recalculationOfTheSolution(int waitTime, boolean displayChart, int disruptMode, boolean onlyMode, ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
+    private void recalculationOfTheSolution(int waitTime, boolean displayChart, int disruptMode1, int disruptMode2, boolean onlyMode, ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
         System.out.println("*****************************************************************************");
         System.out.println("* Demarrage du calcul d'une solution avec un temps maximal de : " + (waitTime / 1000) + " secondes *");
         System.out.println("*****************************************************************************");
@@ -231,14 +268,14 @@ public class Solver {
         int iter = 0;
         while ((actualTime - startTime) < wait && previousSolution != actualSolution) {
             if (onlyMode) {
-                ynTest = disruptionSolution(disruptMode, ynTest, znTest);
+                ynTest = disruptionSolution(disruptMode1, ynTest, znTest);
             } else {
                 if (iter <= 1000) {
                     ynTest = disruptionSolution(0, ynTest, znTest);
-                } else if (iter % 50 == 0) {
-                    ynTest = disruptionSolution(0, ynTest, znTest);
+                } else if (iter % 30 == 0) {
+                    ynTest = disruptionSolution(disruptMode2, ynTest, znTest);
                 } else {
-                    ynTest = disruptionSolution(disruptMode, ynTest, znTest);
+                    ynTest = disruptionSolution(disruptMode1, ynTest, znTest);
                 }
             }
 
@@ -265,12 +302,23 @@ public class Solver {
         res.add(bestSolution);
         Courbes.mainPanel.setScores(res);
 
+        int check = 0;
+        for (Boolean b : yn) {
+            if (b) {
+                check++;
+            }
+        }
+        if(check != parser.getNbCluster()){
+            System.err.println("Erreur dans la solution trouvée");
+            System.exit(0);
+        }
+
         if ((actualTime - startTime) >= wait) {
             System.out.println("Arret du Systeme le temps est depasse, meilleur solution trouvee : " + bestSolution + " en un total de " + iter + " iterations");
         }
 
         if (previousSolution == actualSolution) {
-            System.out.println("Une solution a ete trouvee : " + bestSolution + " en un total de " + iter + " iterations"+" en "+(actualTime - startTime)+" millisecondes");
+            System.out.println("Une solution a ete trouvee : " + bestSolution + " en un total de " + iter + " iterations" + " en " + (actualTime - startTime) + " millisecondes");
         }
 
         displaySolution(yn, zn);
@@ -356,7 +404,8 @@ public class Solver {
         String src = "";
         int waitTimeMax;
         boolean displayChart;
-        int disruptMode;
+        int disruptMode1;
+        int disruptMode2;
         boolean onlyMode;
         try {
             if (args.length > 0) {
@@ -370,15 +419,29 @@ public class Solver {
             } else {
                 waitTimeMax = 10000;
             }
-            displayChart = args.length > 2 && args[2].compareTo("1") == 0;
-            if (args.length > 3) {
-                disruptMode = Integer.parseInt(args[3]);
+            if (args.length > 2 && args[2].compareTo("1") == 0) {
+                displayChart = true;
             } else {
-                disruptMode = 2;
+                displayChart = false;
             }
-            onlyMode = args.length > 4 && args[4].compareTo("1") == 0;
-            System.out.println(src + " " + waitTimeMax + " " + displayChart + " " + disruptMode + " " + onlyMode);
-            Solver s = new Solver(src, waitTimeMax, displayChart, disruptMode, onlyMode);
+            if (args.length > 3) {
+                disruptMode1 = Integer.parseInt(args[3]);
+            } else {
+                disruptMode1 = 0;
+            }
+            if (args.length > 4) {
+                disruptMode2 = Integer.parseInt(args[4]);
+            } else {
+                disruptMode2 = 0;
+            }
+            if (args.length > 5 && args[5].compareTo("1") == 0) {
+                onlyMode = true;
+            } else {
+                onlyMode = false;
+            }
+            System.out.println("************************************");
+            System.out.println("* src : "+src + "\n* waitTimeMax : " + waitTimeMax + "\n* displayChart : " + displayChart + "\n* disruptMode1 : " + disruptMode1 + "\n* disruptMode2 : " + disruptMode2 + "\n* onlyMode : " + onlyMode);
+            Solver s = new Solver(src, waitTimeMax, displayChart, disruptMode1, disruptMode2, onlyMode);
         } catch (NumberFormatException exception) {
             System.out.println("Erreur dans les parametres d'entree");
         }
