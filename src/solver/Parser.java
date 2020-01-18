@@ -21,7 +21,7 @@ public class Parser {
             e.printStackTrace();
         }
         System.out.println("************************************");
-        System.out.println("* Donn�es "+src+" charg�es");
+        System.out.println("* Donnees "+src+" chargees");
         System.out.println("* Dimension : "+dimension);
         System.out.println("* Nombre de points : "+nbPoints);
         System.out.println("* Nombre de cluster : "+nbCluster);

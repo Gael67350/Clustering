@@ -14,16 +14,16 @@ public class Solver {
         ArrayList<Boolean> yn = constructiveSolution();
         ArrayList<ArrayList<Boolean>> zn = setPointInCluster(yn);
         // Mode de perturbation :
-        // [0] random complet *D�faut*
+        // [0] aléatoire complet *Defaut*
         // [1] modification d'un seul centre de cluster
-        // [2] modification de la moiti� des centres de cluster
-        // [3] TODO modification de tout les clusters avec le points le plus proche de chaque centre de cluster
+        // [2] modification de la moitie des centres de cluster
+        // [3] modification de tout les clusters avec le points le plus proche de chaque centre de cluster
         recalculationOfTheSolution(waitTimeMax, displayChart, disruptMode, onlyMode, yn, zn);
     }
 
     /**
-     * Solution constructive qui permet de g�n�rer le yn indiquant
-     * quels points sont choisis pour �tre centre de cluster
+     * Solution constructive qui permet de generer le yn indiquant
+     * quels points sont choisis pour etre centre de cluster
      */
     private ArrayList<Boolean> constructiveSolution() {
         ArrayList<Boolean> yn = generateBooleanTab(parser.getNbPoints());
@@ -42,8 +42,8 @@ public class Solver {
     }
 
     /**
-     * M�thode qui prend en entr�e les centres de cluster et remplit zn pour indiquer
-     * � quel cluster appartient chaque point
+     * Methode qui prend en entree les centres de cluster et remplit zn pour indiquer
+     * A quel cluster appartient chaque point
      *
      * @param yn les centres de cluster
      * @return la matrice zn
@@ -115,12 +115,12 @@ public class Solver {
     }
 
     /**
-     * M�thode qui modifie le choix des clusters d'une certaines mani�res
+     * Methode qui modifie le choix des clusters d'une certaines mani�res
      *
      * @param mode type de perturbation
      * @param yn   les centres de cluster
      * @param zn   les associations des points dans chaque cluster
-     *             return yn modifi�
+     *             return yn modifie
      */
     private ArrayList<Boolean> disruptionSolution(int mode, ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
         switch (mode) {
@@ -131,7 +131,7 @@ public class Solver {
                 yn = changeYn(Math.floorDiv(parser.getNbCluster(), 2), yn, zn);
                 break;
             case 3:
-//                yn = changeYnNearestNeighbor(yn, zn);
+                yn = changeYnNearestNeighbor(yn, zn);
                 break;
             default:
                 Collections.shuffle(yn, new Random());
@@ -201,7 +201,7 @@ public class Solver {
     /**
      * M�thode pour progresser dans la courbe en modifiant les cluster
      *
-     * @param waitTime temps maximal avant interruption si aucune solution n'est trouv�e en millisecondes
+     * @param waitTime temps maximal avant interruption si aucune solution n'est trouvee en millisecondes
      */
     private void recalculationOfTheSolution(int waitTime, boolean displayChart, int disruptMode, boolean onlyMode, ArrayList<Boolean> yn, ArrayList<ArrayList<Boolean>> zn) {
         System.out.println("*****************************************************************************");
@@ -266,18 +266,18 @@ public class Solver {
         Courbes.mainPanel.setScores(res);
 
         if ((actualTime - startTime) >= wait) {
-            System.out.println("Arr�t du Syst�me le temps est d�pass�, meilleur solution trouv�e : " + bestSolution + " en un total de " + iter + " it�rations");
+            System.out.println("Arret du Systeme le temps est depasse, meilleur solution trouvee : " + bestSolution + " en un total de " + iter + " iterations");
         }
 
         if (previousSolution == actualSolution) {
-            System.out.println("Une solution a �t� trouv�e : " + bestSolution + " en un total de " + iter + " it�rations"+" en "+(actualTime - startTime)+" millisecondes");
+            System.out.println("Une solution a ete trouvee : " + bestSolution + " en un total de " + iter + " iterations"+" en "+(actualTime - startTime)+" millisecondes");
         }
 
         displaySolution(yn, zn);
     }
 
     /**
-     * M�thode pour afficher proprement les param�tres yn et zn
+     * Methode pour afficher proprement les parametres yn et zn
      *
      * @param yn les centres de cluster
      * @param zn les associations des points dans chaque cluster
@@ -380,7 +380,7 @@ public class Solver {
             System.out.println(src + " " + waitTimeMax + " " + displayChart + " " + disruptMode + " " + onlyMode);
             Solver s = new Solver(src, waitTimeMax, displayChart, disruptMode, onlyMode);
         } catch (NumberFormatException exception) {
-            System.out.println("Erreur dans les param�tres d'entr�e");
+            System.out.println("Erreur dans les parametres d'entree");
         }
     }
 }

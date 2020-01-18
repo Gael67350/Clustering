@@ -70,7 +70,41 @@ Le script a été exécuté avec Python 2.7.14 et nécessite le module pyplot de
 
 #### Exécution des méta-heuristiques (solveur)
 
-// TODO
+Le solveur utilisant différentes méta-heuristiques et affichant la solution soit après le dépassement du temps limite ou par arrêt du Hill-Climbing.
+ 
+Avant d'exécuter la commande, veillez à vous rendre dans le dossier /build du projet.
+
+````shell script
+java -jar Solver.jar <filepath> <waitTimeMax> <displayChart> <disruptMode> <onlyMode>
+
+filepath:     Le chemin vers le fichier de données au format OPL
+waitTimeMax:  Temps maximal en milliseconde avant l'arrêt du solveur si aucune solution n'est trouvée avant
+displayChart: Boolean indiquant si vous souhaitez afficher le graphique durant la recherche de solution
+disruptMode : Mode de perturbation (cf liste des modes disponibles)
+onlyMode :    Boolean indiquant si vous souhaitez n'utiliser que la méthode <disruptMode> durant tout le temps
+              de recherche ou réaliser de l'intensification/diversification
+````
+
+##### Modes de perturbations disponibles
+````text
+[0] Aléatoire complet *Defaut*
+[1] Modification d'un seul centre de cluster
+[2] Modification de la moitié des centres de cluster
+[3] Modification de tout les clusters avec le points le plus proche de chaque centre de cluster
+````
+
+
+##### Exemple :
+Pour ouvrir le fichier OPL "clustering.dat" situé dans le même dossier que Solveur.jar, avec un temps maximal de 10 secondes, 
+en affichant le graphique, avec le mode 2 de perturbation et en demandant de faire de l'intensification/diversification :
+
+````shell script
+java -jar Solver.jar clustering.dat 10000 1 2 0
+````
+
+##### Autres informations :
+
+L'exécutable .JAR a été compilé et exécuté avec Java 1.8.0_152.
 
 ### Licence
 
