@@ -70,7 +70,7 @@ Le script a été exécuté avec Python 2.7.14 et nécessite le module pyplot de
 
 #### Exécution des méta-heuristiques (solveur)
 
-Le solveur utilisant différentes méta-heuristiques et affichant la solution soit après le dépassement du temps limite ou par arrêt du Hill-Climbing.
+Le solveur utilise différentes méta-heuristiques et affiche la solution soit après le dépassement du temps limite ou par arrêt du Hill-Climbing.
  
 Avant d'exécuter la commande, veillez à vous rendre dans le dossier /build du projet.
 
@@ -78,13 +78,13 @@ Avant d'exécuter la commande, veillez à vous rendre dans le dossier /build du 
 java -jar Solver.jar <filepath> <waitTimeMax> <displayChart> <disruptMode1> <disruptMode2> <onlyMode>
 
 filepath:      Le chemin vers le fichier de données au format OPL
-waitTimeMax:   Temps maximal en milliseconde avant l'arrêt du solveur si aucune solution n'est trouvée avant
+waitTimeMax:   Temps maximal en millisecondes avant l'arrêt du solveur si aucune solution n'est trouvée avant
 displayChart:  Boolean indiquant si vous souhaitez afficher le graphique durant la recherche de solution *Défaut=0*
 disruptMode1 : Mode de perturbation intensification (cf liste des modes disponibles) *Défaut=0*
 disruptMode2 : Mode de perturbation diversification (cf liste des modes disponibles) *Défaut=0*
 onlyMode :     Boolean indiquant si vous souhaitez n'utiliser que la méthode <disruptMode1> durant tout le temps
                de recherche ou réaliser de l'intensification/diversification *Défaut=0*
-               [Si <onlyMode> est à false alors toutes les 50 itérations le solveur appellera la méthode <disruptMode2> pour
+               [Si <onlyMode> est à false alors toutes les 50 itérations, le solveur appellera la méthode <disruptMode2> pour
                modifier les centres de cluster]
 ````
 
@@ -93,7 +93,7 @@ onlyMode :     Boolean indiquant si vous souhaitez n'utiliser que la méthode <d
 [0] Aléatoire complet
 [1] Modification d'un seul centre de cluster
 [2] Modification de la moitié des centres de cluster
-[3] Modification de tout les clusters avec le points le plus proche de chaque centre de cluster
+[3] Modification de tout les clusters avec le point le plus proche de chaque centre de cluster
 ````
 
 
